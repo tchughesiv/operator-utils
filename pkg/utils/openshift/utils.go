@@ -29,3 +29,8 @@ func DetectOpenShift(pv PlatformVersioner, cfg *rest.Config) (bool, error) {
 	}
 	return info.Name == OpenShift, nil
 }
+
+func GetPlatformInfo(cfg *rest.Config) (PlatformInfo, error) {
+	return K8SBasedPlatformVersioner{}.GetPlatformInfo(nil, cfg)
+}
+
