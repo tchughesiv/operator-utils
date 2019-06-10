@@ -1,45 +1,31 @@
 package openshift
 
 import (
-	"k8s.io/client-go/discovery"
+	"errors"
 	"k8s.io/client-go/rest"
-	"sigs.k8s.io/controller-runtime/pkg/client/config"
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 )
 
-var log = logf.Log.WithName("env")
+var (
+	log          = logf.Log.WithName("utils")
+	ErrInfoFetch = errors.New("error fetching PlatformInfo")
+)
 
+// maintained for legacy method signature
 func IsOpenShift(cfg *rest.Config) (bool, error) {
-	log.Info("attempting detection of OpenShift platform...")
+	return DetectOpenShift(nil, cfg)
+}
 
-	if cfg == nil {
-		var err error
-		cfg, err = config.GetConfig()
-		if err != nil {
-			log.Error(err, "error in fetching config, returning false")
-			return false, err
-		}
+// new logic endpoint allowing PlatformVersioner struct testing/injectability
+func DetectOpenShift(pv PlatformVersioner, cfg *rest.Config) (bool, error) {
+
+	if pv == nil {
+		pv = K8SBasedPlatformVersioner{}
 	}
-
-	discoveryClient, err := discovery.NewDiscoveryClientForConfig(cfg)
+	info, err := pv.GetPlatformInfo(nil, cfg)
 	if err != nil {
-		log.Error(err, "error in fetching discovery client, returning false")
-		return false, err
+		log.Error(err, ErrInfoFetch.Error()+", returning false")
+		return false, ErrInfoFetch
 	}
-
-	apiList, err := discoveryClient.ServerGroups()
-	if err != nil {
-		log.Error(err, "error in getting ServerGroups from discovery client, returning false")
-		return false, err
-	}
-
-	for _, v := range apiList.Groups {
-		if v.Name == "route.openshift.io" {
-			log.Info("OpenShift route detected in api groups, returning true")
-			return true, nil
-		}
-	}
-
-	log.Info("OpenShift route not found in groups, returning false")
-	return false, nil
+	return info.Name == OpenShift, nil
 }

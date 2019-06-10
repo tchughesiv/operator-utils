@@ -269,6 +269,14 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:7c44b13249444014ea8c3c8f6f595452236d48e7947e610bd9cb6defb6d51b7a"
+  name = "github.com/openshift/cluster-operator"
+  packages = ["pkg/apis/clusteroperator"]
+  pruneopts = "UT"
+  revision = "668db5da8c20226eb5f317da91c57538616688a6"
+
+[[projects]]
+  branch = "master"
   digest = "1:89da0f0574bc94cfd0ac8b59af67bf76cdd110d503df2721006b9f0492394333"
   name = "github.com/petar/GoLLRB"
   packages = ["llrb"]
@@ -282,6 +290,14 @@
   pruneopts = "UT"
   revision = "0be1b92a6df0e4f5cb0a5d15fb7f643d0ad93ce6"
   version = "v3.0.0"
+
+[[projects]]
+  digest = "1:cf31692c14422fa27c83a05292eb5cbe0fb2775972e8f1f8446a71549bd8980b"
+  name = "github.com/pkg/errors"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "ba968bfe8b2f7e042a574c888954fccecfa385b4"
+  version = "v0.8.1"
 
 [[projects]]
   digest = "1:0028cb19b2e4c3112225cd871870f2d9cf49b9b4276531f03438a88e94be86fe"
@@ -486,7 +502,7 @@
   revision = "5cb15d34447165a97c76ed5a60e4e99c8a01ecfe"
 
 [[projects]]
-  digest = "1:b2cfe244b03da212f079df14c605a5b11f81172106320f1cf415fc49dff74ebf"
+  digest = "1:94b3b19818aa63df6db8e0cff74fced182085a5513523e38a5d6b94b22ffaa3f"
   name = "k8s.io/apimachinery"
   packages = [
     "pkg/api/errors",
@@ -494,6 +510,7 @@
     "pkg/api/resource",
     "pkg/apis/meta/v1",
     "pkg/apis/meta/v1/unstructured",
+    "pkg/apis/meta/v1/validation",
     "pkg/apis/meta/v1beta1",
     "pkg/conversion",
     "pkg/conversion/queryparams",
@@ -568,11 +585,23 @@
   version = "v0.2.0"
 
 [[projects]]
-  digest = "1:67bbb2cffedfe09e5477ba5299ae563a57e43875bae7587174f14cd07442e615"
+  digest = "1:e348df7475ea2670d705c41bf6cecfdc05dee6e5c8af20925bc638557fd97f20"
+  name = "sigs.k8s.io/cluster-api"
+  packages = [
+    "pkg/apis/cluster/common",
+    "pkg/apis/cluster/v1alpha1",
+  ]
+  pruneopts = "UT"
+  revision = "0f911c1f65a59b65791a1afb6e66a9503801f59f"
+  version = "0.1.1"
+
+[[projects]]
+  digest = "1:7db37a189fe7445e4f3860f21426d1f6039865d129f8841cba52bf5899aa3768"
   name = "sigs.k8s.io/controller-runtime"
   packages = [
     "pkg/client/config",
     "pkg/runtime/log",
+    "pkg/runtime/scheme",
   ]
   pruneopts = "UT"
   revision = "12d98582e72927b6cd0123e2b4e819f9341ce62c"
@@ -594,7 +623,9 @@
     "github.com/go-openapi/spec",
     "github.com/go-openapi/strfmt",
     "github.com/go-openapi/validate",
+    "github.com/openshift/cluster-operator/pkg/apis/clusteroperator",
     "github.com/stretchr/testify/assert",
+    "k8s.io/apimachinery/pkg/version",
     "k8s.io/client-go/discovery",
     "k8s.io/client-go/rest",
     "sigs.k8s.io/controller-runtime/pkg/client/config",
