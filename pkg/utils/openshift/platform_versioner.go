@@ -38,20 +38,20 @@ type K8SBasedPlatformVersioner struct{}
 
 // deal with cfg coming from legacy method signature and allow injection for client testing
 func (K8SBasedPlatformVersioner) DefaultArgs(client Discoverer, cfg *rest.Config) (Discoverer, *rest.Config, error) {
-	if client == nil {
-		var err error
-		client, err = discovery.NewDiscoveryClientForConfig(cfg)
-		if err != nil {
-			log.Error(err, ErrDiscoveryClientFetch.Error())
-			return nil, nil, ErrDiscoveryClientFetch
-		}
-	}
 	if cfg == nil {
 		var err error
 		cfg, err = config.GetConfig()
 		if err != nil {
 			log.Error(err, ErrRestConfigFetch.Error())
 			return nil, nil, ErrRestConfigFetch
+		}
+	}
+	if client == nil {
+		var err error
+		client, err = discovery.NewDiscoveryClientForConfig(cfg)
+		if err != nil {
+			log.Error(err, ErrDiscoveryClientFetch.Error())
+			return nil, nil, ErrDiscoveryClientFetch
 		}
 	}
 	return client, cfg, nil
