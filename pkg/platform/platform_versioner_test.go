@@ -1,13 +1,14 @@
 package platform
 
 import (
+	"testing"
+
 	openapi_v2 "github.com/googleapis/gnostic/OpenAPIv2"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/version"
 	"k8s.io/client-go/rest"
-	"testing"
 )
 
 type FakeDiscoverer struct {
@@ -80,7 +81,7 @@ func TestDetectOpenShift(t *testing.T) {
 				Info: ocpInfo,
 				Err:  nil,
 			},
-			cfg:          nil,
+			cfg:          &rest.Config{},
 			expectedBool: true,
 			expectedErr:  nil,
 		},
@@ -89,7 +90,7 @@ func TestDetectOpenShift(t *testing.T) {
 				Info: k8sInfo,
 				Err:  nil,
 			},
-			cfg:          nil,
+			cfg:          &rest.Config{},
 			expectedBool: false,
 			expectedErr:  nil,
 		},
@@ -98,7 +99,7 @@ func TestDetectOpenShift(t *testing.T) {
 				Info: ocpInfo,
 				Err:  errors.New("uh oh"),
 			},
-			cfg:          nil,
+			cfg:          &rest.Config{},
 			expectedBool: false,
 			expectedErr:  ErrInfoFetch,
 		},
@@ -127,7 +128,7 @@ func TestK8SBasedPlatformVersioner_GetPlatformInfo(t *testing.T) {
 			discoverer: FakeDiscoverer{
 				ServerVersionError: errors.New("oops"),
 			},
-			config:       nil,
+			config:       &rest.Config{},
 			expectedInfo: PlatformInfo{Name: Kubernetes},
 			expectedErr:  ErrK8SVersionFetch,
 		},
@@ -141,7 +142,7 @@ func TestK8SBasedPlatformVersioner_GetPlatformInfo(t *testing.T) {
 					Minor: "2",
 				},
 			},
-			config:       nil,
+			config:       &rest.Config{},
 			expectedInfo: PlatformInfo{Name: Kubernetes, K8SVersion: "1.2"},
 			expectedErr:  ErrServerGroupsFetch,
 		},
@@ -158,7 +159,7 @@ func TestK8SBasedPlatformVersioner_GetPlatformInfo(t *testing.T) {
 					Groups:   []v1.APIGroup{},
 				},
 			},
-			config:       nil,
+			config:       &rest.Config{},
 			expectedInfo: PlatformInfo{Name: Kubernetes, K8SVersion: "1.2"},
 			expectedErr:  nil,
 		},
@@ -180,7 +181,7 @@ func TestK8SBasedPlatformVersioner_GetPlatformInfo(t *testing.T) {
 					},
 				},
 			},
-			config:       nil,
+			config:       &rest.Config{},
 			expectedInfo: PlatformInfo{Name: OpenShift, K8SVersion: "1.2"},
 			expectedErr:  ErrOpenAPISchemaFetch,
 		},
@@ -206,7 +207,7 @@ func TestK8SBasedPlatformVersioner_GetPlatformInfo(t *testing.T) {
 					},
 				},
 			},
-			config:       nil,
+			config:       &rest.Config{},
 			expectedInfo: PlatformInfo{Name: OpenShift, K8SVersion: "1.2", OCPVersion: "v3.11.42"},
 			expectedErr:  nil,
 		},
