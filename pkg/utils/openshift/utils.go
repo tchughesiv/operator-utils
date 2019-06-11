@@ -1,7 +1,7 @@
 package openshift
 
 import (
-	"github.com/jeremyary/operator-utils/pkg/platform"
+	"github.com/RHsyseng/operator-utils/pkg/platform"
 	"k8s.io/client-go/rest"
 )
 
