@@ -1,4 +1,4 @@
-package openshift
+package platform
 
 import (
 	"encoding/json"
@@ -9,9 +9,12 @@ import (
 	"k8s.io/client-go/discovery"
 	"k8s.io/client-go/rest"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
+	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 )
 
 var (
+	log                     = logf.Log.WithName("utils")
+	ErrInfoFetch            = errors.New("error fetching PlatformInfo")
 	ClusterVersionApiPath   = "apis/config.openshift.io/v1/clusterversions/version"
 	ErrDefaultingArgs       = errors.New("error while defaulting non-provided args for PlatformInfo fetch")
 	ErrRestConfigFetch      = errors.New("error fetching REST config to replace passed nil")
@@ -121,4 +124,17 @@ func (pv K8SBasedPlatformVersioner) GetPlatformInfo(client Discoverer, cfg *rest
 
 	log.Info(info.String())
 	return info, nil
+}
+
+func DetectOpenShift(pv PlatformVersioner, cfg *rest.Config) (bool, error) {
+
+	if pv == nil {
+		pv = K8SBasedPlatformVersioner{}
+	}
+	info, err := pv.GetPlatformInfo(nil, cfg)
+	if err != nil {
+		log.Error(err, ErrInfoFetch.Error()+", returning false")
+		return false, ErrInfoFetch
+	}
+	return info.Name == OpenShift, nil
 }

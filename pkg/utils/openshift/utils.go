@@ -1,36 +1,24 @@
 package openshift
 
 import (
-	"errors"
+	"github.com/jeremyary/operator-utils/pkg/platform"
 	"k8s.io/client-go/rest"
-	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 )
 
-var (
-	log          = logf.Log.WithName("utils")
-	ErrInfoFetch = errors.New("error fetching PlatformInfo")
-)
-
-// maintained for legacy method signature
+/*
+IsOpenShift tests the Kubernetes-based environment for indicators that the running platform is OpenShift.
+Accepts <nil> or instantiated 'cfg' rest config parameter.
+*/
 func IsOpenShift(cfg *rest.Config) (bool, error) {
-	return DetectOpenShift(nil, cfg)
+	return platform.DetectOpenShift(nil, cfg)
 }
 
-// new logic endpoint allowing PlatformVersioner struct testing/injectability
-func DetectOpenShift(pv PlatformVersioner, cfg *rest.Config) (bool, error) {
+/*
+GetPlatformInfo examines the Kubernetes-based environment and determines the running platform, version, & OS.
+Accepts <nil> or instantiated 'cfg' rest config parameter.
 
-	if pv == nil {
-		pv = K8SBasedPlatformVersioner{}
-	}
-	info, err := pv.GetPlatformInfo(nil, cfg)
-	if err != nil {
-		log.Error(err, ErrInfoFetch.Error()+", returning false")
-		return false, ErrInfoFetch
-	}
-	return info.Name == OpenShift, nil
+Result: PlatformInfo{ Name: Kubernetes, OCPVersion: , K8SVersion: 1.14, OS: linux/amd64 }
+*/
+func GetPlatformInfo(cfg *rest.Config) (platform.PlatformInfo, error) {
+	return platform.K8SBasedPlatformVersioner{}.GetPlatformInfo(nil, cfg)
 }
-
-func GetPlatformInfo(cfg *rest.Config) (PlatformInfo, error) {
-	return K8SBasedPlatformVersioner{}.GetPlatformInfo(nil, cfg)
-}
-
