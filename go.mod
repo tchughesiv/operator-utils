@@ -15,7 +15,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.42.1
 	github.com/stretchr/testify v1.6.1
-	go.uber.org/zap v1.16.0
+	go.uber.org/zap v1.10.0
 	k8s.io/api v0.19.0
 	k8s.io/apimachinery v0.19.0
 	k8s.io/client-go v0.19.0
@@ -30,5 +30,6 @@ replace (
 	// Pinned to kubernetes-1.19.0
 	k8s.io/api => k8s.io/api v0.19.0
 	k8s.io/apimachinery => k8s.io/apimachinery v0.19.0
-	k8s.io/client-go => k8s.io/client-go v0.19.0 // Required by prometheus-operator
+	k8s.io/client-go => k8s.io/client-go v0.19.0
+	k8s.io/kubernetes => k8s.io/kubernetes v1.19.0
 )
